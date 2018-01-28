@@ -1,0 +1,22 @@
+<div class="container" style="margin-top: 4rem">
+  <div class="input-group">
+    <input type="text" class="form-control" placeholder="Todo..." #input>
+
+    <span class="input-group-btn">
+        <button class="btn btn-default" type="button" (click)="add(input)">Add</button>
+      </span>
+  </div>
+
+  <p>Filters:</p>
+
+  <app-todos-filters (filter)="changeFilter($event)"
+                     [filters]="filters"
+                     [active]="active$ | async">
+  </app-todos-filters>
+
+  <app-todos [todos]="todos$ | async"
+             (delete)="delete($event)"
+             (complete)="complete($event)"
+  ></app-todos>
+
+</div>
