@@ -13,12 +13,7 @@ export class TodosQuery {
     this.getVisibleTodos
   );
 
-
   constructor(private store: TodosStore, private filterQuery: FilterQuery) {
-  }
-
-  selectCompleted(id: number) {
-    return this.store.fromEntity(id, entity => entity.completed);
   }
 
   private getVisibleTodos(filter, todos) {
