@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
   todos$: Observable<Todo[]>;
   active$: Observable<VISIBILITY_FILTER>;
   filters = [
-    { label: 'All', value: 'SHOW_ALL' },
+    { label: "All", value: 'SHOW_ALL' },
     { label: 'Completed', value: 'SHOW_COMPLETED' },
     { label: 'Active', value: 'SHOW_ACTIVE' }
   ];

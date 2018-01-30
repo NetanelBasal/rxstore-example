@@ -10,10 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "p": "prettier  --write 'src/**/*.ts'",
-    "precommit": "lint-staged"
-  },
-  "lint-staged": {
-    "*.{ts}": ["prettier --write", "git add"]
+    "precommit": "pretty-quick --staged"
   },
   "private": true,
   "dependencies": {

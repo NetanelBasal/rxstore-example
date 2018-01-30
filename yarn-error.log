@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn add lint-staged husky --dev
+  /usr/local/bin/node /usr/local/bin/yarn add pretty-quick husky --dev
 
 PATH: 
   /Users/netanelbasal/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -26,7 +26,10 @@ npm manifest:
       "lint": "ng lint",
       "e2e": "ng e2e",
       "p": "prettier  --write 'src/**/*.ts'",
-      "l": "tslint src/app/app.component.ts"
+      "precommit": "lint-staged"
+    },
+    "lint-staged": {
+      "*.{ts}": ["prettier --write", "git add"]
     },
     "private": true,
     "dependencies": {
