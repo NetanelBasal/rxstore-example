@@ -9,14 +9,14 @@ import { FilterQuery } from './todos/filter/filter.query';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
+  templateUrl: "./app.component.html",
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   todos$: Observable<Todo[]>;
   active$: Observable<VISIBILITY_FILTER>;
   filters = [
-    { label: 'All', value: 'SHOW_ALL' },
+    { label: "All", value: 'SHOW_ALL' },
     { label: 'Completed', value: 'SHOW_COMPLETED' },
     { label: 'Active', value: 'SHOW_ACTIVE' }
   ];
