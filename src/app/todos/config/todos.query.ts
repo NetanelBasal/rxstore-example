@@ -1,7 +1,7 @@
-import {Injectable} from "@angular/core";
-import {TodosStore} from "./todos.store";
-import {FilterQuery} from "../filter/filter.query";
-import {combineLatest} from "rxjs/observable/combineLatest";
+import { Injectable } from '@angular/core';
+import { TodosStore } from './todos.store';
+import { FilterQuery } from '../filter/filter.query';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Injectable()
 export class TodosQuery {
@@ -13,16 +13,15 @@ export class TodosQuery {
     this.getVisibleTodos
   );
 
-  constructor(private store: TodosStore, private filterQuery: FilterQuery) {
-  }
+  constructor(private store: TodosStore, private filterQuery: FilterQuery) {}
 
   private getVisibleTodos(filter, todos) {
     switch (filter) {
-      case "SHOW_COMPLETED":
+      case 'SHOW_COMPLETED':
         return todos.filter(t => t.completed);
-      case "SHOW_ACTIVE":
+      case 'SHOW_ACTIVE':
         return todos.filter(t => !t.completed);
-      case "SHOW_ALL":
+      case 'SHOW_ALL':
       default:
         return todos;
     }

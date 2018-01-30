@@ -1,8 +1,8 @@
-import {Store} from "../../core/store";
-import {VISIBILITY_FILTER, Filter} from "./filter.model";
+import { Store } from '../../core/store';
+import { VISIBILITY_FILTER, Filter } from './filter.model';
 
 export interface State {
-  active: VISIBILITY_FILTER
+  active: VISIBILITY_FILTER;
 }
 
 const initialState: State = {

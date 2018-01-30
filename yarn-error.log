@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn install
+  /usr/local/bin/node /usr/local/bin/yarn add lint-staged husky --dev
 
 PATH: 
   /Users/netanelbasal/bin:/usr/local/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
@@ -8,7 +8,7 @@ Yarn version:
   0.16.1
 
 Node version: 
-  6.0.0
+  8.1.4
 
 Platform: 
   darwin x64
@@ -24,10 +24,13 @@ npm manifest:
       "build": "ng build",
       "test": "ng test",
       "lint": "ng lint",
-      "e2e": "ng e2e"
+      "e2e": "ng e2e",
+      "p": "prettier  --write 'src/**/*.ts'",
+      "l": "tslint src/app/app.component.ts"
     },
     "private": true,
     "dependencies": {
+      "@angular-devkit/core": "0.0.28",
       "@angular/animations": "^5.0.0",
       "@angular/common": "^5.0.0",
       "@angular/compiler": "^5.0.0",
@@ -38,6 +41,9 @@ npm manifest:
       "@angular/platform-browser-dynamic": "^5.0.0",
       "@angular/router": "^5.0.0",
       "core-js": "^2.4.1",
+      "immer": "^0.8.5",
+      "json-formatter-js": "^2.2.0",
+      "ramda": "^0.25.0",
       "rxjs": "^5.5.2",
       "zone.js": "^0.8.14"
     },
@@ -74,5 +80,4 @@ Lockfile:
   No lockfile
 
 Trace: 
-  Error: https://registry.yarnpkg.com/tsickle/-/tsickle-0.26.0.tgz: EACCES: permission denied, open '/Users/netanelbasal/.yarn-cache/npm-tsickle-0.26.0/src/class_decorator_downlevel_transformer.js'
-      at Error (native)
+  Error: EACCES: permission denied, unlink '/Users/netanelbasal/.yarn-cache/npm-tsickle-0.26.0/src/class_decorator_downlevel_transformer.d.ts'

@@ -9,7 +9,11 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "l": "tslint src/app/app.component.ts"
+    "p": "prettier  --write 'src/**/*.ts'",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts}": ["prettier --write", "git add"]
   },
   "private": true,
   "dependencies": {

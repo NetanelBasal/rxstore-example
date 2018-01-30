@@ -1,5 +1,5 @@
 // import {assocPath, dissocPath, lensPath, merge, omit} from "ramda";
-import {Entityable} from "./store";
+import { Entityable } from './store';
 
 // import produce from "immer";
 
@@ -112,7 +112,7 @@ export class CRUD {
    * @private
    */
   _delete<T extends Entityable>(state: T, id: number | string): T {
-    const {[id]: entity, ...rest} = state.entities;
+    const { [id]: entity, ...rest } = state.entities;
 
     return {
       ...(state as any),
@@ -152,11 +152,10 @@ export class CRUD {
    * @param {string} id
    * @returns {any}
    */
-  private keyBy(entities: any[], id = "id") {
+  private keyBy(entities: any[], id = 'id') {
     return entities.reduce((acc, entity) => {
       acc[entity[id]] = entity;
       return acc;
     }, {});
   }
-
 }

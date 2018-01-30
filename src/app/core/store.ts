@@ -1,16 +1,16 @@
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Observable} from "rxjs/Observable";
-import {values} from "ramda";
-import {CRUD as _CRUD} from "./crud";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/filter";
-import "rxjs/add/operator/withLatestFrom";
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
+import { values } from 'ramda';
+import { CRUD as _CRUD } from './crud';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/withLatestFrom';
 
-function logger({storeName, currentState, newState}) {
+function logger({ storeName, currentState, newState }) {
   console.group(storeName);
-  console.log(`%c prev state `, "font-weight: bold; color: darkgrey", currentState);
-  console.log(`%c next state `, "font-weight: bold; color: hotpink", newState);
+  console.log(`%c prev state `, 'font-weight: bold; color: darkgrey', currentState);
+  console.log(`%c next state `, 'font-weight: bold; color: hotpink', newState);
   console.groupEnd();
   return newState;
 }
@@ -24,8 +24,6 @@ const PRE_MIDDLEWARES = [logger];
  *   1: Dashboard
  * }
  */
-;
-
 export interface HashMap<T> {
   [id: string]: T;
 }
@@ -101,11 +99,10 @@ export class Store<S extends Entityable<E>, E> {
     const selectEntities$ = this.select(state => state.entities);
 
     return selectEntities$.withLatestFrom(selectIds$, (entities, ids) => {
-      console.log("asArray");
+      console.log('asArray');
       return ids.map(id => entities[id]);
     });
   }
-
 
   /**
    * Get the raw entities as array
@@ -127,7 +124,6 @@ export class Store<S extends Entityable<E>, E> {
     return this.select(state => state.entities[id]).filter(Boolean);
   }
 
-
   /**
    * Return a slice from entity
    *
@@ -146,7 +142,6 @@ export class Store<S extends Entityable<E>, E> {
       return null;
     }).distinctUntilChanged();
   }
-
 
   /**
    *
@@ -216,8 +211,7 @@ export class Store<S extends Entityable<E>, E> {
   createOrUpdate(id: ID, entity: Partial<E> | E) {
     if (this.value().entities[id]) {
       this.put(id, entity);
-    }
-    else {
+    } else {
       this.add(id, entity as E);
     }
   }
@@ -334,18 +328,19 @@ export class Store<S extends Entityable<E>, E> {
     return this._store.asObservable();
   }
 
-
   /**
    *
    * @param newState
    * @private
    */
   private _addMiddlewares(newState) {
-    PRE_MIDDLEWARES.forEach(middleware => middleware({
-      newState,
-      currentState: this.value(),
-      storeName: this.constructor.name
-    }));
+    PRE_MIDDLEWARES.forEach(middleware =>
+      middleware({
+        newState,
+        currentState: this.value(),
+        storeName: this.constructor.name
+      })
+    );
   }
 }
 
@@ -353,7 +348,8 @@ export class Store<S extends Entityable<E>, E> {
  *
  * @returns {Entityable}
  */
-export const getInitialState = () => ({
-  entities: {},
-  ids: []
-}) as Entityable;
+export const getInitialState = () =>
+  ({
+    entities: {},
+    ids: []
+  } as Entityable);

@@ -1,15 +1,14 @@
-import {TodosStore} from "./todos.store";
-import {Todo} from "./todo.model";
-import {Injectable} from "@angular/core";
-import {VisibilityFilterStore} from "../filter/filter.store";
-import {VISIBILITY_FILTER} from "../filter/filter.model";
-import {of} from "rxjs/observable/of";
+import { TodosStore } from './todos.store';
+import { Todo } from './todo.model';
+import { Injectable } from '@angular/core';
+import { VisibilityFilterStore } from '../filter/filter.store';
+import { VISIBILITY_FILTER } from '../filter/filter.model';
+import { of } from 'rxjs/observable/of';
 
 @Injectable()
 export class TodosService {
-
   constructor(private todosStore: TodosStore, private filterStore: VisibilityFilterStore) {
-    const mockTodos = Array.from({length: 10000}, (_, x) => ({id: x}));
+    const mockTodos = Array.from({ length: 10000 }, (_, x) => ({ id: x }));
     of(mockTodos)
       .mapWorker(todos => {
         return todos.map(todo => ({
@@ -23,9 +22,7 @@ export class TodosService {
       });
   }
 
-  normalize() {
-
-  }
+  normalize() {}
 
   updateFilter(filter: VISIBILITY_FILTER) {
     this.filterStore.update(state => {
@@ -35,8 +32,8 @@ export class TodosService {
     });
   }
 
-  complete({id, completed}: Todo) {
-    this.todosStore.createOrUpdate(id, {completed});
+  complete({ id, completed }: Todo) {
+    this.todosStore.createOrUpdate(id, { completed });
   }
 
   add(title: string) {

@@ -1,9 +1,16 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {VISIBILITY_FILTER} from "../filter/filter.model";
-import {FormControl} from "@angular/forms";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
+import { VISIBILITY_FILTER } from '../filter/filter.model';
+import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: "app-todos-filters",
+  selector: 'app-todos-filters',
   template: `
     <select [formControl]="control" class="form-control">
       <option *ngFor="let filter of filters; trackBy: trackBy" [ngValue]="filter.value"
@@ -16,7 +23,8 @@ import {FormControl} from "@angular/forms";
 export class TodosFiltersComponent implements OnInit {
   private _active: VISIBILITY_FILTER;
 
-  @Input() set active(filter: VISIBILITY_FILTER) {
+  @Input()
+  set active(filter: VISIBILITY_FILTER) {
     this._active = filter;
   }
 
@@ -24,13 +32,12 @@ export class TodosFiltersComponent implements OnInit {
     return this._active === filter;
   }
 
-  @Input() filters: { label: string, value: VISIBILITY_FILTER }[];
+  @Input() filters: { label: string; value: VISIBILITY_FILTER }[];
 
   @Output() filter = new EventEmitter<VISIBILITY_FILTER>();
   control: FormControl;
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit() {
     this.control = new FormControl(this._active);
@@ -42,5 +49,4 @@ export class TodosFiltersComponent implements OnInit {
   trackBy(filter, index) {
     return index;
   }
-
 }

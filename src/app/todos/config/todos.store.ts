@@ -1,12 +1,11 @@
-import {Entityable, Store} from "../../core/store";
-import {Todo} from "./todo.model";
+import { Entityable, Store } from '../../core/store';
+import { Todo } from './todo.model';
 
-export interface State extends Entityable<Todo> {
-}
+export interface State extends Entityable<Todo> {}
 
 const initialState: State = {
   entities: {
-    1: new Todo(1, "one")
+    1: new Todo(1, 'one')
   },
   ids: [1]
 };

@@ -1,8 +1,5 @@
-import {of} from "rxjs/observable/of";
+import { of } from 'rxjs/observable/of';
 
 export class TodosDataService {
-
-  get() {
-
-  }
+  get() {}
 }

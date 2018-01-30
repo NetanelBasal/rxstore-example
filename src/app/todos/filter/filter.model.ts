@@ -1,9 +1,9 @@
 export enum VISIBILITY_FILTER {
-  SHOW_COMPLETED = "SHOW_COMPLETED",
-  SHOW_ACTIVE = "SHOW_ACTIVE",
-  SHOW_ALL = "SHOW_ALL"
+  SHOW_COMPLETED = 'SHOW_COMPLETED',
+  SHOW_ACTIVE = 'SHOW_ACTIVE',
+  SHOW_ALL = 'SHOW_ALL'
 }
 
-export type Filter =  {
+export type Filter = {
   active: VISIBILITY_FILTER;
-}
+};

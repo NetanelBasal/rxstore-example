@@ -1,8 +1,15 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Todo} from "../config/todo.model";
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
+import { Todo } from '../config/todo.model';
 
 @Component({
-  selector: "app-todos",
+  selector: 'app-todos',
   template: `
     <div class="list-group">
       <app-todo *ngFor="let todo of todos;"
@@ -19,7 +26,5 @@ export class TodosComponent implements OnInit {
   @Output() complete = new EventEmitter<Todo>();
   @Output() delete = new EventEmitter<number>();
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
