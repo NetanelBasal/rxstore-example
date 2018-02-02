@@ -5,7 +5,7 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 
 @Injectable()
 export class TodosQuery {
-  selectTodos$ = this.store.asArray();
+  selectTodos$ = this.store.selectAll();
 
   selectVisibleTodos$ = combineLatest(
     this.filterQuery.visibilityFilter$,

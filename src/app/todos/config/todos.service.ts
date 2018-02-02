@@ -17,15 +17,12 @@ export class TodosService {
           completed: false
         }));
       })
-      .subscribe(res => {
-        console.log(res);
-      });
+      .do(console.log)
+      .subscribe();
   }
 
-  normalize() {}
-
   updateFilter(filter: VISIBILITY_FILTER) {
-    this.filterStore.update(state => {
+    this.filterStore.setState(state => {
       return {
         active: filter
       };
@@ -33,15 +30,15 @@ export class TodosService {
   }
 
   complete({ id, completed }: Todo) {
-    this.todosStore.createOrUpdate(id, { completed });
+    this.todosStore.updateOne(id, { completed });
   }
 
   add(title: string) {
     const id = Math.random();
-    this.todosStore.add(id, new Todo(id, title));
+    this.todosStore.addOne(new Todo(id, title));
   }
 
   delete(id) {
-    this.todosStore.delete(id);
+    this.todosStore.removeOne(id);
   }
 }

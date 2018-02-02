@@ -1,4 +1,4 @@
-import { Store } from '../../core/store';
+import { Store } from '../../core/cuscus-store';
 import { VISIBILITY_FILTER, Filter } from './filter.model';
 
 export interface State {

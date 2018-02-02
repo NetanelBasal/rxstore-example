@@ -1,7 +1,8 @@
-import { Entityable, Store } from '../../core/store';
+import { Store } from '../../core/cuscus-store';
 import { Todo } from './todo.model';
+import { EntityState } from '../../core/cuscus-config';
 
-export interface State extends Entityable<Todo> {}
+export interface State extends EntityState<Todo> {}
 
 const initialState: State = {
   entities: {
