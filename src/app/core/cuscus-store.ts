@@ -70,6 +70,9 @@ export class Store<S extends EntityState<E>, E> {
    *
    * @returns {Observable<E[]> | Observable<HashMap<E>>}
    */
+  selectAll(asMap?: false): Observable<E[]>;
+  selectAll(asMap: true): Observable<HashMap<E>>;
+  selectAll(asMap?: boolean): Observable<E[] | HashMap<E>>;
   selectAll(asMap = false): Observable<E[] | HashMap<E>> {
     if (asMap) return this._entitiesAsMap();
 
@@ -92,6 +95,9 @@ export class Store<S extends EntityState<E>, E> {
    *
    * @returns {E[] | HashMap<E>}
    */
+  getAll(asMap?: false): E[];
+  getAll(asMap: true): HashMap<E>;
+  getAll(asMap?: boolean): E[] | HashMap<E>;
   getAll(asMap = false): E[] | HashMap<E> {
     if (asMap) return this.value().entities as HashMap<E>;
 

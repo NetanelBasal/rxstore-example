@@ -49,7 +49,7 @@ describe('Store', () => {
   });
 
   it('should select all as array', () => {
-    const s = store.selectAll().subscribe((todos: Todo[]) => {
+    const s = store.selectAll().subscribe(todos => {
       expect(Array.isArray(todos)).toBe(true);
       expect(todos.length).toBe(1);
       expect(todos[0]).toBe(todo);
@@ -67,7 +67,7 @@ describe('Store', () => {
   });
 
   it('should get all as array', () => {
-    const todosStore = store.getAll() as Todo[];
+    const todosStore = store.getAll();
     expect(Array.isArray(todosStore)).toBe(true);
     expect(todosStore.length).toBe(1);
     expect(todosStore[0]).toBe(todo);
