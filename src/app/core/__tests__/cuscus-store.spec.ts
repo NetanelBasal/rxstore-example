@@ -74,7 +74,7 @@ describe('Store', () => {
   });
 
   it('should select entity', () => {
-    const s = store.selectEntity(1).subscribe((current: Todo) => {
+    const s = store.selectEntity(1).subscribe(current => {
       expect(current).toEqual(todo);
     });
     s.unsubscribe();

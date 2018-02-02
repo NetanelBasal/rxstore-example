@@ -115,9 +115,11 @@ export class Store<S extends EntityState<E>, E> {
    * @param {(selectEntity: E) => R} project
    * @returns {Observable<R>}
    */
+  selectEntity<R>(id: ID): Observable<E>;
+  selectEntity<R>(id: ID, project: (entity: E) => R): Observable<R>;
   selectEntity<R>(id: ID, project?: (entity: E) => R): Observable<R | E> {
     if (!project) {
-      return this._byId(id) as Observable<E>;
+      return this._byId(id);
     }
     return this.select(state => {
       const entity = state.entities[id];
