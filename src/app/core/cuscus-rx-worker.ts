@@ -2,7 +2,7 @@ import { Observable } from 'rxjs/Observable';
 
 declare module 'rxjs/Observable' {
   interface Observable<T> {
-    mapWorker: typeof mapWorker;
+    workerMap: typeof workerMap;
   }
 }
 
@@ -11,12 +11,13 @@ declare module 'rxjs/Observable' {
  * @param cb
  * @returns {Observable<any>}
  */
-function mapWorker(cb) {
+function workerMap(cb) {
   return new Observable(observer => {
     const worker = _createWorker(cb);
 
     worker.onmessage = function(e) {
       observer.next(e.data);
+      worker.terminate();
     };
 
     worker.onerror = function(error) {
@@ -24,17 +25,7 @@ function mapWorker(cb) {
       worker.terminate();
     };
 
-    this.subscribe(
-      value => {
-        worker.postMessage(value);
-      },
-      err => {
-        worker.terminate();
-      },
-      () => {
-        worker.terminate();
-      }
-    );
+    this.subscribe(value => worker.postMessage(value));
   });
 }
 
@@ -46,7 +37,7 @@ function mapWorker(cb) {
  */
 function _createWorker(fn) {
   const blob = new Blob(
-    ['self.cb = ', fn, ';', 'self.onmessage = function (e) { self.postMessage(self.cb(e.data)) }'],
+    [`self.cb = ${fn};self.onmessage = function (e) { self.postMessage(self.cb(e.data)) }`],
     {
       type: 'text/javascript'
     }
@@ -56,4 +47,4 @@ function _createWorker(fn) {
   return new Worker(url);
 }
 
-Observable.prototype.mapWorker = mapWorker;
+Observable.prototype.workerMap = workerMap;

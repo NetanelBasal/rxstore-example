@@ -37,4 +37,5 @@ export interface ActiveState {
 /** Entity id interface */
 export type ID = number | string;
 
+/** Injection token for app stores */
 export const STORES = new InjectionToken<Store<any, any>>('APP_STORES');
