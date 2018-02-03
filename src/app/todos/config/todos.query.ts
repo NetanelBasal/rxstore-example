@@ -2,20 +2,23 @@ import { Injectable } from '@angular/core';
 import { TodosStore } from './todos.store';
 import { FilterQuery } from '../filter/filter.query';
 import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Query } from '../../core/cuscus-query';
+import { Todo } from './todo.model';
+import { State } from './todos.store';
 
 @Injectable()
-export class TodosQuery {
-  selectTodos$ = this.store.selectAll();
-
+export class TodosQuery extends Query<State, Todo> {
   selectVisibleTodos$ = combineLatest(
     this.filterQuery.visibilityFilter$,
-    this.selectTodos$,
+    this.selectAll(),
     this.getVisibleTodos
   );
 
-  constructor(private store: TodosStore, private filterQuery: FilterQuery) {}
+  constructor(protected store: TodosStore, private filterQuery: FilterQuery) {
+    super(store);
+  }
 
-  private getVisibleTodos(filter, todos) {
+  private getVisibleTodos(filter, todos): Todo[] {
     switch (filter) {
       case 'SHOW_COMPLETED':
         return todos.filter(t => t.completed);

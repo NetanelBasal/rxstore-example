@@ -5,6 +5,9 @@
  *   1: Dashboard
  * }
  */
+import { InjectionToken } from '@angular/core';
+import { Store } from './cuscus-store';
+
 export interface HashMap<T> {
   [id: string]: T;
 }
@@ -33,3 +36,5 @@ export interface ActiveState {
 
 /** Entity id interface */
 export type ID = number | string;
+
+export const STORES = new InjectionToken<Store<any, any>>('APP_STORES');

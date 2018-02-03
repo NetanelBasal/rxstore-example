@@ -17,8 +17,6 @@ function mapWorker(cb) {
 
     worker.onmessage = function(e) {
       observer.next(e.data);
-      observer.complete();
-      worker.terminate();
     };
 
     worker.onerror = function(error) {
@@ -26,9 +24,17 @@ function mapWorker(cb) {
       worker.terminate();
     };
 
-    this.subscribe(value => {
-      worker.postMessage(value);
-    });
+    this.subscribe(
+      value => {
+        worker.postMessage(value);
+      },
+      err => {
+        worker.terminate();
+      },
+      () => {
+        worker.terminate();
+      }
+    );
   });
 }
 

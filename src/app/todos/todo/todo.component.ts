@@ -26,7 +26,7 @@ import { FormControl } from '@angular/forms';
 })
 export class TodoComponent implements OnInit {
   @Input() todo: Todo;
-  @Output() complete = new EventEmitter<Todo>();
+  @Output() complete = new EventEmitter<Partial<Todo>>();
   @Output() delete = new EventEmitter<number>();
 
   control: FormControl;

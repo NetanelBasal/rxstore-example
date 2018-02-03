@@ -4,11 +4,12 @@ export class CRUD {
   /**
    *
    * @param {T} state
-   * @param {any[]} entities
+   * @param {EntityState[]} entities
+   * @param idKey
    * @returns {T}
    * @private
    */
-  _addAll<T extends EntityState>(state: T, entities: any[], idKey): T {
+  _set<T extends EntityState>(state: T, entities: EntityState[], idKey): T {
     const toHashMap = this.keyBy(entities, idKey);
     return {
       ...(state as any),
@@ -20,30 +21,12 @@ export class CRUD {
   /**
    *
    * @param {T} state
-   * @param entity
+   * @param {EntityState[]} entities
    * @param idKey
    * @returns {T}
    * @private
    */
-  _addOne<T extends EntityState>(state: T, entity, idKey): T {
-    return {
-      ...(state as any),
-      ids: [...state.ids, ...entity[idKey]],
-      entities: {
-        ...state.entities,
-        [entity[idKey]]: entity
-      }
-    };
-  }
-
-  /**
-   *
-   * @param {T} state
-   * @param {any[]} entities
-   * @returns {T}
-   * @private
-   */
-  _addMany<T extends EntityState>(state: T, entities: any[], idKey): T {
+  _add<T extends EntityState>(state: T, entities: EntityState[], idKey): T {
     let addedEntities = {};
     let addedIds = [];
     entities.forEach(entity => {
@@ -63,32 +46,13 @@ export class CRUD {
   /**
    *
    * @param {T} state
-   * @param {string | number} id
-   * @param newState
-   * @returns {T}
-   * @private
-   */
-  _updateOne<T extends EntityState>(state: T, id: ID, newState): T {
-    const newEntity = state.entities[id].assign(newState);
-    return {
-      ...(state as any),
-      entities: {
-        ...state.entities,
-        [id]: newEntity
-      }
-    };
-  }
-
-  /**
-   *
-   * @param {T} state
    * @param {ID[]} ids
    * @param newState
    * @returns {T}
    * @private
    */
-  _updateMany<T extends EntityState>(state: T, ids: ID[] | null, newState): T {
-    const updatedEntities = (ids ? ids : state.ids).reduce((acc, id) => {
+  _update<T extends EntityState>(state: T, ids: ID[], newState): T {
+    const updatedEntities = ids.reduce((acc, id) => {
       const newEntity = state.entities[id].assign(newState);
       acc[id] = newEntity;
       return acc;
@@ -106,28 +70,13 @@ export class CRUD {
   /**
    *
    * @param {T} state
-   * @param {number | string} id
+   * @param {ID[] | null} ids
    * @returns {T}
    * @private
    */
-  _removeOne<T extends EntityState>(state: T, id: ID): T {
-    const { [id]: entity, ...rest } = state.entities;
+  _remove<T extends EntityState>(state: T, ids: ID[] | null): T {
+    if (!ids) return this._removeAll(state);
 
-    return {
-      ...(state as any),
-      entities: rest,
-      ids: state.ids.filter(current => current !== id)
-    };
-  }
-
-  /**
-   *
-   * @param {T} state
-   * @param {ID[]} ids
-   * @returns {T}
-   * @private
-   */
-  _removeMany<T extends EntityState>(state: T, ids: ID[]): T {
     const removed = ids.reduce((acc, id) => {
       const { [id]: entity, ...rest } = acc;
       return rest;
@@ -143,10 +92,11 @@ export class CRUD {
   /**
    *
    * @param {T} state
+   * @param {ID} active
    * @returns {T}
    * @private
    */
-  _removeAll<T extends EntityState>(state: T, active?: ID): T {
+  private _removeAll<T extends EntityState>(state: T, active?: ID): T {
     const newState = {
       ...(state as any),
       entities: {},

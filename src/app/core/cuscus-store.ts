@@ -5,7 +5,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/withLatestFrom';
-import { ActiveState, EntityState, HashMap, ID } from './cuscus-config';
+import { EntityState, ID } from './cuscus-config';
+import { coerceArray } from './cuscus-utils';
 
 function logger({ storeName, currentState, newState }) {
   console.group(storeName);
@@ -41,7 +42,7 @@ export class Store<S extends EntityState<E>, E> {
    */
   constructor(initialState, private idKey = 'id') {
     this._store = new BehaviorSubject(initialState);
-    this._addMiddlewares(initialState);
+    // // this._addMiddlewares(initialState);
   }
 
   /**
@@ -54,108 +55,6 @@ export class Store<S extends EntityState<E>, E> {
    */
   select<R>(project: (store: S) => R): Observable<R> {
     return this._store$.map(project).distinctUntilChanged();
-  }
-
-  /**
-   * Select the collection as array
-   *
-   * this.store.selectAll();
-   * Observable[Entity, Entity, Entity, Entity]
-   *
-   * Or as map:
-   *
-   * this.store.selectAll(true);
-   *
-   * Observable<{1: Entity, 2: Entity}>
-   *
-   * @returns {Observable<E[]> | Observable<HashMap<E>>}
-   */
-  selectAll(asMap?: false): Observable<E[]>;
-  selectAll(asMap: true): Observable<HashMap<E>>;
-  selectAll(asMap?: boolean): Observable<E[] | HashMap<E>>;
-  selectAll(asMap = false): Observable<E[] | HashMap<E>> {
-    if (asMap) return this._entitiesAsMap();
-
-    const selectIds$ = this.select(state => state.ids);
-    const selectEntities$ = this.select(state => state.entities);
-
-    return selectEntities$.withLatestFrom(selectIds$, (entities, ids) => {
-      return ids.map(id => entities[id]);
-    });
-  }
-
-  /**
-   * Get the collection as array
-   *
-   * [Entity, Entity, Entity]
-   *
-   * Or as map:
-   *
-   * { 1: Entity, 2: Entity }
-   *
-   * @returns {E[] | HashMap<E>}
-   */
-  getAll(asMap?: false): E[];
-  getAll(asMap: true): HashMap<E>;
-  getAll(asMap?: boolean): E[] | HashMap<E>;
-  getAll(asMap = false): E[] | HashMap<E> {
-    if (asMap) return this.value().entities as HashMap<E>;
-
-    const ids = this.value().ids;
-    const entities = this.value().entities;
-    return ids.map(id => entities[id]);
-  }
-
-  /**
-   * Return the entity or a slice from the entity
-   * this.pagesStore.selectEntity(1)
-   * this.pagesStore.selectEntity(1, entity => entity.config.date)
-   *
-   * @param {ID} id
-   * @param {(selectEntity: E) => R} project
-   * @returns {Observable<R>}
-   */
-  selectEntity<R>(id: ID): Observable<E>;
-  selectEntity<R>(id: ID, project: (entity: E) => R): Observable<R>;
-  selectEntity<R>(id: ID, project?: (entity: E) => R): Observable<R | E> {
-    if (!project) {
-      return this._byId(id);
-    }
-    return this.select(state => {
-      const entity = state.entities[id];
-      if (entity) {
-        return project(entity);
-      }
-      return null;
-    });
-  }
-
-  /**
-   * Get the entity by id
-   *
-   * this.store.getEntity(1);
-   *
-   * @param id
-   * @returns {any}
-   */
-  getEntity(id: ID): E {
-    return this.value().entities[id];
-  }
-
-  /**
-   * Select the active id
-   * @returns {Observable<number | string>}
-   */
-  selectActive(): Observable<ID> {
-    return this.select(state => (state as S & ActiveState).active);
-  }
-
-  /**
-   * Get the active id
-   * @returns {ID}
-   */
-  getActive(): ID {
-    return (this.value() as S & ActiveState).active;
   }
 
   /**
@@ -176,130 +75,80 @@ export class Store<S extends EntityState<E>, E> {
    */
   setState(newStateFn: (state: S) => S) {
     const newState = newStateFn(this.value());
-    this._addMiddlewares(newState);
+    // this._addMiddlewares(newState);
     this.dispatch(newState);
-  }
-
-  /**
-   * Create or update entity
-   * @param id
-   * @param entity
-   */
-  createOrUpdate(id: ID, entity: Partial<E> | E) {
-    if (this.value().entities[id]) {
-      this.updateOne(id, entity);
-    } else {
-      this.addOne(entity as E);
-    }
+    return newState;
   }
 
   /**
    * Replace current collection with provided collection
    *
-   * this.store.addAll([Entity, Entity]);
+   * this.store.set([Entity, Entity]);
+   * this.store.set(Entity);
+   *
+   * @param {E[] | E} entities
+   */
+  set(entities: E[] | E) {
+    this.setState(state => this._crud._set(state, coerceArray(entities), this.idKey));
+  }
+
+  /**
+   * Add an entitiy/s to the collection
+   *
+   * this.store.add([Entity, Entity]);
+   * this.store.add(Entity);
    *
    * @param {E[]} entities
    */
-  addAll(entities: E[]) {
-    this.setState(state => this._crud._addAll(state, entities, this.idKey));
+  add(entities: E[] | E) {
+    this.setState(state => this._crud._add(state, coerceArray(entities), this.idKey));
   }
 
   /**
    *
-   * Add one selectEntity to the collection
+   * Update entity/entities in the collection
    *
-   * this.store.addOne(Entity)
+   * this.store.update(3, {
+   *   name: 'New Name'
+   * });
    *
-   * @param entity
-   * @param id
-   */
-  addOne(entity: E) {
-    this.setState(state => this._crud._addOne(state, entity, this.idKey));
-  }
-
-  /**
+   * this.store.update([1,2,3], {
+   *   name: 'New Name'
+   * });
    *
-   * Add multiple entities to the collection
    *
-   * this.store.addMany([
-   *  Entity, Entity, Entity
-   * ]);
-   *
-   * @param {E[]} entities
-   */
-  addMany(entities: E[]) {
-    this.setState(state => this._crud._addMany(state, entities, this.idKey));
-  }
-
-  /**
-   *
-   * Update one selectEntity in the collection
-   *
-   * this.store.updateOne(3, {
+   * this.store.update(null, {
    *   name: 'New Name'
    * });
    *
    * @param id
    * @param newState
    */
-  updateOne(id: ID, newState: Partial<E>) {
-    this.setState(state => this._crud._updateOne(state, id, newState));
+  update(id: ID | ID[] | null, newState: Partial<E>) {
+    const ids = id == null ? this.value().ids : coerceArray(id as any);
+    this.setState(state => this._crud._update(state, ids, newState));
   }
 
   /**
    *
-   * Update multiple entities in the collection
+   * Remove one/multi entities from the collection
    *
-   * this.store.updateMany([1,2,3], {
-   *   name: 'New Name'
-   * });
+   * this.store.remove(5);
    *
-   * Or all of them:
+   * this.store.remove([1,2,3]);
    *
-   * this.store.updateMany(null, {
-   *   completed: true
-   * });
-   * @param ids
-   * @param newState
-   */
-  updateMany(ids: ID[] | null, newState: Partial<E>) {
-    this.setState(state => this._crud._updateMany(state, ids, newState));
-  }
-
-  /**
-   *
-   * Remove one selectEntity from the collection
-   *
-   * this.store.removeOne(5);
+   * this.store.remove();
    *
    * @param id
    */
-  removeOne(id: ID) {
-    this.setState(state => this._crud._removeOne(state, id));
+  remove(id?: ID | ID[]) {
+    const ids = id ? coerceArray(id) : null;
+    this.setState(state => this._crud._remove(state, ids));
   }
 
   /**
    *
-   * Remove multiple entities from the collection
-   *
-   * this.store.removeMany([1, 6, 5]);
-   *
-   * @param id
-   */
-  removeMany(ids: ID[]) {
-    this.setState(state => this._crud._removeMany(state, ids));
-  }
-
-  /**
-   *   lear entity collection
-   */
-  removeAll(active?) {
-    this.setState(state => this._crud._removeAll(state, active));
-  }
-
-  /**
-   *
-   * Set the selectActive selectEntity
+   * Set the active entity
    *
    * @param {number} id
    */
@@ -328,26 +177,6 @@ export class Store<S extends EntityState<E>, E> {
    */
   private get _store$() {
     return this._store.asObservable();
-  }
-
-  /**
-   * Select an selectEntity by id
-   *
-   * @param {number} id
-   * @returns {Observable<any>}
-   */
-  private _byId(id: ID): Observable<E> {
-    return this.select(state => state.entities[id]).filter(Boolean);
-  }
-
-  /**
-   *
-   * Get the entities as observable
-   *
-   * @returns {Observable<HashMap<E>>}
-   */
-  private _entitiesAsMap(): Observable<HashMap<E>> {
-    return this.select(state => state.entities);
   }
 
   /**

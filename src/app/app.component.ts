@@ -6,6 +6,7 @@ import { TodosService } from './todos/config/todos.service';
 import 'rxjs/add/operator/do';
 import { VISIBILITY_FILTER } from './todos/filter/filter.model';
 import { FilterQuery } from './todos/filter/filter.query';
+import { AppStores } from './app-stores.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
     private todosQuery: TodosQuery,
     private filterQuery: FilterQuery,
     private _differs: KeyValueDiffers,
-    private todosService: TodosService
+    private todosService: TodosService,
+    private appStoresService: AppStores
   ) {}
 
   ngOnInit() {

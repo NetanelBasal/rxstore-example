@@ -1,10 +1,12 @@
 import { CRUD } from '../cuscus-crud';
 import { ID } from '../cuscus-config';
 import { Entity } from '../cuscus-entity';
+import { coerceArray } from '../cuscus-utils';
 
-@Entity()
-class Todo {
-  constructor(public id: ID, public title: string, public dummy = []) {}
+class Todo extends Entity<Todo> {
+  constructor(public id: ID, public title: string, public dummy = []) {
+    super();
+  }
 }
 
 function getEntitiesCount(store) {
@@ -23,7 +25,7 @@ describe('CRUD', () => {
       const todoOne = new Todo(1, '1');
       const todoTwo = new Todo(2, '2');
 
-      store = crud._addAll(store, [todoOne, todoTwo], 'id');
+      store = crud._add(store, [todoOne, todoTwo], 'id');
 
       expect(getEntitiesCount(store)).toEqual(2);
       expect(store.ids.length).toBe(2);
@@ -35,7 +37,7 @@ describe('CRUD', () => {
   describe('addOne', () => {
     it('should add one', () => {
       const todo = new Todo(3, '3');
-      store = crud._addOne(store, todo, 'id');
+      store = crud._add(store, coerceArray(todo), 'id');
 
       expect(getEntitiesCount(store)).toBe(3);
       expect(store.ids.length).toBe(3);
@@ -49,7 +51,7 @@ describe('CRUD', () => {
       const two = new Todo(5, '5');
       const three = new Todo(6, '6');
 
-      store = crud._addMany(store, [one, two, three], 'id');
+      store = crud._add(store, [one, two, three], 'id');
 
       expect(getEntitiesCount(store)).toBe(6);
       expect(store.ids.length).toBe(6);
@@ -62,7 +64,7 @@ describe('CRUD', () => {
   describe('updateOne', () => {
     it('should update one', () => {
       const old = store.entities[3];
-      store = crud._updateOne(store, 3, { title: 'changed' });
+      store = crud._update(store, [3], { title: 'changed' });
 
       expect(store.entities[3].title).toBe('changed');
       expect(store.entities[3].id).toBe(3);
@@ -79,7 +81,7 @@ describe('CRUD', () => {
       const oldTwo = store.entities[5];
       const oldThree = store.entities[6];
 
-      store = crud._updateMany(store, [4, 5, 6], { title: 'changed many' });
+      store = crud._update(store, [4, 5, 6], { title: 'changed many' });
 
       expect(store.entities[4].title).toBe('changed many');
       expect(store.entities[5].title).toBe('changed many');
@@ -103,7 +105,7 @@ describe('CRUD', () => {
   });
   describe('removeOne', () => {
     it('should remove one', () => {
-      store = crud._removeOne(store, 3);
+      store = crud._remove(store, [3]);
 
       expect(getEntitiesCount(store)).toBe(5);
       expect(store.ids.length).toBe(5);
@@ -113,7 +115,7 @@ describe('CRUD', () => {
 
   describe('removeMany', () => {
     it('should remove many', () => {
-      store = crud._removeMany(store, [4, 5]);
+      store = crud._remove(store, [4, 5]);
 
       expect(getEntitiesCount(store)).toBe(3);
       expect(store.ids.length).toBe(3);
@@ -128,7 +130,7 @@ describe('CRUD', () => {
 
   describe('removeAll', () => {
     it('should remove all', () => {
-      store = crud._removeAll(store);
+      store = crud._remove(store, null);
 
       expect(getEntitiesCount(store)).toBe(0);
       expect(store.ids.length).toBe(0);

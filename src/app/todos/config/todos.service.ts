@@ -30,15 +30,15 @@ export class TodosService {
   }
 
   complete({ id, completed }: Todo) {
-    this.todosStore.updateOne(id, { completed });
+    this.todosStore.update(id, { completed });
   }
 
   add(title: string) {
     const id = Math.random();
-    this.todosStore.addOne(new Todo(id, title));
+    this.todosStore.add(new Todo(id, title));
   }
 
   delete(id) {
-    this.todosStore.removeOne(id);
+    this.todosStore.remove(id);
   }
 }
