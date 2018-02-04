@@ -1,7 +1,7 @@
-import { CRUD } from '../cuscus-crud';
-import { ID } from '../cuscus-config';
-import { Entity } from '../cuscus-entity';
-import { coerceArray } from '../cuscus-utils';
+import { CRUD } from '../akita-crud';
+import { ID } from '../akita-config';
+import { Entity } from '../akita-entity';
+import { coerceArray } from '../akita-utils';
 
 class Todo extends Entity<Todo> {
   constructor(public id: ID, public title: string, public dummy = []) {

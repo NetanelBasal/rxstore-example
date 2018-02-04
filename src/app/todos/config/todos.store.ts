@@ -1,6 +1,6 @@
-import { Store } from '../../core/cuscus-store';
+import { Store } from '../../core/akita-store';
 import { Todo } from './todo.model';
-import { EntityState } from '../../core/cuscus-config';
+import { EntityState } from '../../core/akita-config';
 
 export interface State extends EntityState<Todo> {}
 

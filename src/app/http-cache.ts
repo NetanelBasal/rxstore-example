@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs/Observable';
-import { ID } from './core/cuscus-config';
+import { ID } from './core/akita-config';
 
 export class HTTPCache<T = any> {
   protected _cache = new Map<ID, Observable<T>>();

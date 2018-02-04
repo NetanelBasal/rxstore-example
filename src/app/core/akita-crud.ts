@@ -1,4 +1,4 @@
-import { EntityState, ID } from './cuscus-config';
+import { EntityState, ID } from './akita-config';
 
 export class CRUD {
   /**

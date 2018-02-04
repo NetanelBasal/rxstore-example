@@ -1,7 +1,7 @@
 import { Todo } from '../../todos/config/todo.model';
-import { getInitialState, Store } from '../cuscus-store';
-import { EntityState, HashMap } from '../cuscus-config';
-import { Query } from '../cuscus-query';
+import { getInitialState, Store } from '../akita-store';
+import { EntityState, HashMap } from '../akita-config';
+import { Query } from '../akita-query';
 
 export interface State extends EntityState<Todo> {}
 

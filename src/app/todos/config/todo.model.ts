@@ -1,4 +1,4 @@
-import { Entity } from '../../core/cuscus-entity';
+import { Entity } from '../../core/akita-entity';
 
 export class Todo extends Entity<Todo> {
   constructor(public id: number, public title: string, public completed: boolean = false) {

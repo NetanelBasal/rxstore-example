@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TodosStore } from './todos.store';
 import { FilterQuery } from '../filter/filter.query';
 import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Query } from '../../core/cuscus-query';
+import { Query } from '../../core/akita-query';
 import { Todo } from './todo.model';
 import { State } from './todos.store';
 

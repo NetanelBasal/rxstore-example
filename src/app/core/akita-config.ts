@@ -6,7 +6,7 @@
  * }
  */
 import { InjectionToken } from '@angular/core';
-import { Store } from './cuscus-store';
+import { Store } from './akita-store';
 
 export interface HashMap<T> {
   [id: string]: T;

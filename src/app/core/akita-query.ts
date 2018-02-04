@@ -1,6 +1,7 @@
-import { Store } from './cuscus-store';
-import { ActiveState, EntityState, HashMap, ID } from './cuscus-config';
+import { Store } from './akita-store';
+import { ActiveState, EntityState, HashMap, ID } from './akita-config';
 import { Observable } from 'rxjs/Observable';
+import { filter, withLatestFrom } from 'rxjs/operators';
 
 export class Query<S extends EntityState, E> {
   constructor(protected store: Store<S, E>) {}
@@ -28,9 +29,9 @@ export class Query<S extends EntityState, E> {
     const selectIds$ = this.store.select(state => state.ids);
     const selectEntities$ = this.store.select(state => state.entities);
 
-    return selectEntities$.withLatestFrom(selectIds$, (entities, ids) => {
-      return ids.map(id => entities[id]);
-    });
+    return selectEntities$.pipe(
+      withLatestFrom(selectIds$, (entities, ids) => ids.map(id => entities[id]))
+    );
   }
 
   /**
@@ -114,7 +115,7 @@ export class Query<S extends EntityState, E> {
    * @returns {Observable<any>}
    */
   private _byId(id: ID): Observable<E> {
-    return this.store.select(state => state.entities[id]).filter(Boolean);
+    return this.store.select(state => state.entities[id]).pipe(filter(Boolean));
   }
 
   /**

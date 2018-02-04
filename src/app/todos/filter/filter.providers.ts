@@ -1,7 +1,7 @@
 import { FilterQuery } from './filter.query';
 import { VisibilityFilterStore } from './filter.store';
 import { TodosStore } from '../config/todos.store';
-import { STORES } from '../../core/cuscus-config';
+import { STORES } from '../../core/akita-config';
 
 export const filterProviders = [
   FilterQuery,

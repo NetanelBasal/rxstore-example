@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core';
-import { STORES } from './core/cuscus-config';
-import { Store } from './core/cuscus-store';
+import { STORES } from './core/akita-config';
+import { Store } from './core/akita-store';
 
 @Injectable()
 export class AppStores {

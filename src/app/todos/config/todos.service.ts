@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { VisibilityFilterStore } from '../filter/filter.store';
 import { VISIBILITY_FILTER } from '../filter/filter.model';
 import { of } from 'rxjs/observable/of';
-import { workerMapPipe } from '../../core/cuscus-rx-worker';
+import { workerMapPipe } from '../../core/akita-rx-worker';
 import { tap } from 'rxjs/operators';
 
 @Injectable()

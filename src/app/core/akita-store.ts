@@ -1,12 +1,9 @@
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { CRUD as _CRUD } from './cuscus-crud';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/withLatestFrom';
-import { EntityState, ID } from './cuscus-config';
-import { coerceArray } from './cuscus-utils';
+import { CRUD as _CRUD } from './akita-crud';
+import { EntityState, ID } from './akita-config';
+import { coerceArray } from './akita-utils';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 function logger({ storeName, currentState, newState }) {
   console.group(storeName);
@@ -54,7 +51,7 @@ export class Store<S extends EntityState<E>, E> {
    * @returns {Observable<R>}
    */
   select<R>(project: (store: S) => R): Observable<R> {
-    return this._store$.map(project).distinctUntilChanged();
+    return this._store$.pipe(map(project), distinctUntilChanged());
   }
 
   /**
