@@ -48,3 +48,24 @@ function _createWorker(fn) {
 }
 
 Observable.prototype.workerMap = workerMap;
+
+export const workerMapPipe = (fn: Function) => <T>(source: Observable<T>) =>
+  new Observable(observer => {
+    const worker = _createWorker(fn);
+
+    worker.onmessage = function(e) {
+      observer.next(e.data);
+      worker.terminate();
+    };
+
+    worker.onerror = function(error) {
+      observer.error(error);
+      worker.terminate();
+    };
+
+    return source.subscribe({
+      next(value) {
+        worker.postMessage(value);
+      }
+    });
+  });

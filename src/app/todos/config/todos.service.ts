@@ -4,11 +4,26 @@ import { Injectable } from '@angular/core';
 import { VisibilityFilterStore } from '../filter/filter.store';
 import { VISIBILITY_FILTER } from '../filter/filter.model';
 import { of } from 'rxjs/observable/of';
+import { workerMapPipe } from '../../core/cuscus-rx-worker';
+import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class TodosService {
   constructor(private todosStore: TodosStore, private filterStore: VisibilityFilterStore) {
     const mockTodos = Array.from({ length: 10000 }, (_, x) => ({ id: x }));
+
+    of(mockTodos)
+      .pipe(
+        workerMapPipe(todos => {
+          return todos.map(todo => ({
+            id: todo.id,
+            title: `Todo - ${todo.id}`,
+            completed: false
+          }));
+        }),
+        tap(console.log)
+      )
+      .subscribe();
 
     of(mockTodos)
       .workerMap(todos => {
